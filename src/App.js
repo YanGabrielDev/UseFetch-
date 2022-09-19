@@ -1,25 +1,40 @@
-import logo from './logo.svg';
-import './App.css';
+import logo from "./logo.svg"
+import "./App.css"
+import { useEffect, useRef, useState } from "react"
+import { useFetch } from "./Hooks/useFetch"
+export const App = ()  => {
+  const [postId, setPostId] = useState('')
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+  const [result, loading] = useFetch('https://jsonplaceholder.typicode.com/posts' + postId, {
+    headers: {
+      abc: '2000000'
+    }
+  })
+  
+  useEffect(() => {
+    
+  }, [postId])
+
+  if (loading) {
+    return <p>Loading...</p>
+  }
+  const handleClick = (id) => {
+    console.log(postId)
+   setPostId(id)
+  
+  }
+
+  if (!loading && result) {
+    return ( <div>
+      {result && result.map(p => (
+        <div  key={`post-${p.id}`} onClick={() => handleClick(p.id)}>
+          <p>{p.title}</p>
+        </div>
+      ))}
+    </div>)
+  }
+  return <div className="App">
+    <h1>oi</h1>
+  </div>
 }
 
-export default App;
